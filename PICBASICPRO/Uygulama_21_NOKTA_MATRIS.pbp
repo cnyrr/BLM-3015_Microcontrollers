@@ -1,0 +1,35 @@
+'****************************************************************
+'*  Name    : Uygulama_19_NOKTA_MATRIS.BAS                      *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 4.12.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : Dot matrisde yazi yazdirma.                       *
+'*          :                                                   *
+'****************************************************************
+ TRISB = 0 : TRISC = 0
+ PORTB = 0 : PORTC = 0
+
+ led_satir var byte
+ sayac var byte
+ satir var byte[8]
+
+ satir(0) = %00000000
+ satir(1) = %00010000
+ satir(2) = %00100100
+ satir(3) = %00100000
+ satir(4) = %00100000
+ satir(5) = %00100100
+ satir(6) = %00010000
+ satir(7) = %00000000
+
+ YAZDIR:
+    led_satir = 1
+    for sayac = 0 to 7
+        PORTB = ~led_satir
+        PORTC = satir(sayac)
+        pauseUS 25
+        led_satir = led_satir << 1 
+        next sayac
+ goto YAZDIR

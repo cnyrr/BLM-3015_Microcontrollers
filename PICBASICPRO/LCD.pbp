@@ -1,0 +1,28 @@
+'****************************************************************
+'*  Name    : LCD.BAS                                           *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 5.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : LCD tanimlamalari.                                *
+'****************************************************************
+ DEFINE LCD_DREG PORTD   'LCD data portunun baglandigi PIC portu
+ DEFINE LCD_DBIT 0       '4-bit baglanti kullanilmasi halinde, baslangic biti
+
+ DEFINE LCD_RSREG PORTE  'LCD Register Select'in baglandigi PIC portu
+ DEFINE LCD_RSBIT 0      'Register Select'in baglandigi PIC portunun pin numarasi
+
+ DEFINE LCD_RWREG PORTE  'LCD Read Write'in baglandigi PIC portu
+ DEFINE LCD_RWBIT 1      'Read/Write'in baglandigi PIC portunun pin numarasi
+
+ DEFINE LCD_EREG PORTE   'LCD Enable'in baglandigi PIC portu
+ DEFINE LCD_EBIT 2       'Enable'in baglandigi PIC portunun pin numarasi
+ 
+ DEFINE LCD_BITS 8       'Bus genisligi, 4-bit ya da 8-bit
+ 
+ ADCON1=7                'Analog girisleri dijitale cevirme
+ 
+ PAUSE 100               
+ 
+

@@ -1,0 +1,47 @@
+'****************************************************************
+'*  Name    : TERMINAL.BAS                                      *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 6.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : TERMINAL tanimlamalari.                           *
+'****************************************************************
+ DEFINE HSER_TXSTA 24h ' %x010 0100
+ ' CSRC: Clock Source Select bit:            Asenkron modda onemsiz
+ 
+ ' TX9: 9-bit Transmit Enable bit:           8-bit modda oldugu icin "0" 
+ 
+ ' TXEN: Transmit Enable bit:                Aktif oldugu icin "1"
+ 
+ ' SYNC: USART Mode Select bit:              Asenkron mod icin "0"
+ 
+ ' Unimplemented:                            Gecersiz deger, "0" olarak kabul edilir
+ 
+ ' BRGH: High Baud Rate Select bit:          Asenkron modda aktif etmek icin "1"
+ ' PIC16F87X Datasheet'ine gore asenkron modun dusuk baud clock degerlerinde bile
+ ' aktif olmasi hata miktarini azaltabileceginden dolayi tavsiye ediliyor
+ 
+ ' TRMT: Transmit Shift Register Status bit: Sadece okunabilir
+ 
+ ' TX9D: 9th bit of Transmit Data:           9-bit modda 9. bitin yazilmasi
+ '                                           gereken bit, "0"
+ DEFINE HSER_RCSTA 90h ' % 1000 000x
+ ' SPEN: Serial Port Enable bit:             Aktif oldugu icin "1"
+ 
+ ' RX9: 9-bit Receive Enable bit:            Kullanilmadigi icin "0"
+ 
+ ' SREN: Single Receive Enable bit:          Asenkron modda onemsiz
+ 
+ ' CREN: Continuous Receive Enable bit:      Kullanilmadigi icin "0"
+ 
+ ' ADDEN: Address Detect Enable bit:         Kullanilmadigi icin "0"
+ 
+ ' FERR: Framing Error bit                   Sadece okunabilir
+ 
+ ' OERR: Overrun Error bit                   Sadece okunabilir
+ 
+ ' RX9D: 9th bit of Received Data            Belirsiz
+ 
+ DEFINE HSER_SPBRG 25
+ DEFINE HSER_CLROERR 1 ' Overflow olmasi durumunda CREN'i acip kapatir

@@ -1,0 +1,110 @@
+'****************************************************************
+'*  Name    : Uygulama_17_TAS_KAGIT_MAKAS.BAS                   *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 11.10.2023                                        *
+'*  Version : 1.0                                               *
+'*  Notes   : PIC'e karsi sesli tas-kagit-makas oyunudur.       *
+'****************************************************************
+ include "LCD.pbp"
+ include "TERMINAL.pbp"
+ 
+ oyuncu var byte
+ pic_hamlesi var byte
+ bekleme var byte
+ random_cekirdek var word
+ 
+ random_cekirdek = 18947 
+ 
+ OYUN:
+    GOSUB OTTUR
+    GOSUB GIRDI_AL
+    GOSUB PIC_HAMLESI_SEC
+    GOSUB GOSTER
+    GOSUB KARSILASTIR   
+ goto OYUN
+ 
+ GIRDI_AL:
+    LCDOUT $FE, $01, "TAS-KAGIT-MAKAS"
+    LCDOUT $FE, $C0, "Hamle bekleniyor."
+    
+    HSEROUT ["T-K-M seciniz: "]
+    HSERIN [oyuncu]
+    HSEROUT [13, 10]
+    
+    if oyuncu = "t" OR oyuncu = "k" OR oyuncu = "m" THEN
+
+    ELSEIF oyuncu = "T" THEN
+        oyuncu = "t"
+    ELSEIF oyuncu = "K" THEN
+        oyuncu = "k"
+    ELSEIF oyuncu = "M" THEN
+        Oyuncu = "m"
+    ELSE
+        HSEROUT ["Hatali giris.", 13, 10]
+        GOTO GIRDI_AL
+    ENDIF
+ RETURN
+ 
+ PIC_HAMLESI_SEC:
+    RAndom random_cekirdek
+    pic_hamlesi = random_cekirdek // 3
+    
+    IF pic_hamlesi = 0 THEN
+        pic_hamlesi = "t"
+    ELSEIF pic_hamlesi = 1 THEN
+        pic_hamlesi = "k"
+    ELSE
+        pic_hamlesi = "m"
+    ENDIF
+ RETURN    
+
+ EKRAN_SAYACI:
+    for bekleme = 3 to 1 STEP -1
+        LCDOUT $FE, $CF, #bekleme
+        PAUSE 1000
+    NEXT bekleme    
+ RETURN
+ 
+ GOSTER:
+    LCDOUT $FE, $01, "Oyuncu: "
+    IF oyuncu = "t" THEN
+        LCDOUT "TAS"
+    ELSEIF oyuncu = "k" THEN
+        LCDOUT "KAGIT"
+    ELSE
+        LCDOUT "MAKAS"
+    ENDIF
+    
+    LCDOUT $FE, $C0, "PIC: "
+    IF pic_hamlesi = "t" THEN
+        LCDOUT "TAS"
+    ELSEIF pic_hamlesi = "k" THEN
+        LCDOUT "KAGIT"
+    ELSE
+        LCDOUT "MAKAS"
+    ENDIF
+    
+    GOSUB EKRAN_SAYACI
+ RETURN
+ 
+ KARSILASTIR:
+    IF oyuncu = pic_hamlesi THEN
+        LCDOUT $FE, $01, "Oyun berabere!"
+    ELSEIF (oyuncu = "t" AND pic_hamlesi = "m") OR _
+           (oyuncu = "k" AND pic_hamlesi = "t") OR _
+           (oyuncu = "m" and pic_hamlesi = "k") THEN
+        LCDOUT $FE, $01, "Oyuncu kazandi!"
+    ELSE
+        LCDOUT $FE, $01, "PIC kazandi!"
+    ENDIF
+    
+    GOSUB EKRAN_SAYACI
+ RETURN
+ 
+ OTTUR:
+    SOUND PORTB.0, [25, 2, 30, 2, 35, 2, 40, 2]
+ RETURN 
+ 
+       

@@ -1,0 +1,37 @@
+'****************************************************************
+'*  Name    : Uygulama_14_SAAT.BAS                              *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 6.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : LCD'de çift haneli yazan saat.                    *
+'****************************************************************
+ INCLUDE "LCD.pbp"
+ saat var byte
+ dakika VAR BYTE
+ saniye var byte
+ 
+ saat = 0
+ dakika = 0
+ saniye = 0
+ 
+ YIRMI_DORT_SAAT:
+    WHILE saat < 24
+        WHILE dakika < 60
+            WHILE saniye <  60
+                LCDOUT $FE, $01
+                LCDOUT #(saat DIG 1), #(saat DIG 0), ":",_ 
+                       #(dakika DIG 1), #(dakika DIG 0), ":",_ 
+                       #(saniye DIG 1), #(saniye DIG 0)
+                PAUSE 1000
+                saniye = saniye + 1
+            WEND
+            saniye = 0
+            dakika = dakika + 1
+        WEND
+        dakika = 0
+        saat = saat + 1   
+    WEND
+    saat = 0
+ GOTO YIRMI_DORT_SAAT

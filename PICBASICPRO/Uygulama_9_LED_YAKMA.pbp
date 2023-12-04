@@ -1,0 +1,17 @@
+'****************************************************************
+'*  Name    : Uygulama_9_KARASIMSEK_YANIK.BAS                   *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 5.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : Led yakip sondur.                                 *
+'****************************************************************
+ SYMBOL LED = PORTB.0
+ TRISB = 0
+ 
+ YAK_SONDUR:
+    TOGGLE LED
+    PAUSE 500
+ GOTO YAK_SONDUR
+ 

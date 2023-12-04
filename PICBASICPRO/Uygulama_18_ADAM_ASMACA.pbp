@@ -1,0 +1,156 @@
+'****************************************************************
+'*  Name    : Uygulama_18_ADAM_ASMACA.BAS                       *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 11.10.2023                                        *
+'*  Version : 1.0                                               *
+'*  Notes   : Adam asmaca oyunu.                                *                                                  *
+'****************************************************************
+ include "LCD.pbp"
+ include "TERMINAL.pbp"
+ 
+ kelime var byte[5]
+ gosterilen var byte[5]
+ bekleme var byte
+ pozisyon var byte
+ harf var byte
+ hata_sayisi var byte 
+  
+ LCDOUT $FE, $40, 14,  4,  4,  4,  4,  0,  0 'kafa ve govde   0
+ LCDOUT $FE, $48, 14,  4,  7,  5,  4,  0,  0 'sag kol         1
+ LCDOUT $FE, $50, 14,  4, 31, 21,  4,  0,  0 'sol kol         2
+ LCDOUT $FE, $58, 14,  4, 31, 21,  4,  2,  1 'sag bacak       3
+ LCDOUT $FE, $60, 14,  4, 31, 21,  4, 10, 17 'sol bacak       4
+ LCDOUT $FE, $68,  7,  7,  7,  6,  6,  6,  6 'agac sol ust    5
+ LCDOUT $FE, $70,  6,  6, 14, 14, 14, 14, 31 'agac sol alt    6
+ LCDOUT $FE, $78,  0, 28,  4,  4,  4,  4,  4 'agac dal ve ipe 7
+  
+ OYUN:
+    LCDOUT $FE, $01, "ADAM ASMACA"
+    LCDOUT $FE, $C0, "KELIME GIRIN."
+    
+    GOsub KELIME_AL
+    
+    LCDOUT $FE, $01, "Basliyoruz!"
+    GOSUB ekran_sayaci
+    
+    hata_sayisi = 0
+    GOSUB OYUN_MANTIGI
+ GOTO OYUN
+ 
+ KELIME_AL:
+    HSEROUT ["5 harfli kelime giriniz: "]
+    
+    FOR pozisyon = 0 to 4
+        HSERIN [kelime[pozisyon]]
+        
+        IF (kelime[pozisyon] < 123 AND kelime[pozisyon] > 96) then
+            kelime[pozisyon] = kelime[pozisyon] - 32
+        ENDIF
+        
+        IF (kelime[pozisyon] < 91 AND kelime[pozisyon] > 64) then
+            HSEROUT ["*"]     
+        else
+            HSEROUT [13, 10, "Sadece harf giriniz.", 13, 10]
+            GOTO KELIME_AL
+        ENDIF
+    NEXT pozisyon
+    
+    HSEROUT [13, 10]
+ return
+ 
+ HARF_AL:
+    HSEROUT ["Harf giriniz: "]
+    HSERIN [harf]
+    
+    IF (harf < 123 AND harf > 96) then
+        harf = harf - 32
+    ENDIF
+    IF harf > 64 AND harf < 93 then
+        HSEROUT [13, 10, "Secilen harf: ", harf]       
+    else
+        HSEROUT [13, 10, "Sadece harf giriniz.", 13, 10]
+        goto harf_AL 
+    ENDIF
+    
+    HSEROUT [13, 10]
+ RETURN
+ 
+ OYUN_MANTIGI:
+    arraywrite gosterilen, [95, 95, 95, 95, 95]
+    hata_sayisi = 0
+    
+    GOSUB EKRANA_CIZ
+    WHILE hata_sayisi < 5 AND _
+         ( _
+          kelime[0] != gosterilen[0] OR _
+          kelime[1] != gosterilen[1] OR _
+          kelime[2] != gosterilen[2] OR _
+          kelime[3] != gosterilen[3] OR _
+          kelime[4] != gosterilen[4] )
+        GOSUB EKRANA_CIZ 
+        GOSUB HARF_AL
+        GOSUB HARF_KIYASLA
+        GOSUB EKRANA_CIZ
+        GOSUB EKRAN_SAYACI
+    WEND      
+ RETURN
+
+ HARF_KIYASLA:
+        IF harf != kelime[0] and _
+           harf != kelime[1] and _
+           harf != kelime[2] and _
+           harf != kelime[3] and _
+           harf != kelime[4] then
+           
+           hata_sayisi = hata_sayisi + 1 
+        ELSE
+            IF harf = kelime[0] then
+                gosterilen[0] = harf
+            ENDIF
+            IF harf = kelime[1] then
+                gosterilen[1] = harf
+            ENDIF
+            IF harf = kelime[2] then
+                gosterilen[2] = harf
+            ENDIF
+            IF harf = kelime[3] then
+                gosterilen[3] = harf
+            ENDIF
+            IF harf = kelime[4] then
+                gosterilen[4] = harf
+            ENDIF
+        ENDIF
+ RETURN
+
+ EKRANA_CIZ:
+    LCDOUT $FE, $01, 5, 7, str gosterilen\5
+    
+    IF kelime[0] = gosterilen[0] AND _
+          kelime[1] = gosterilen[1] AND _
+          kelime[2] = gosterilen[2] AND _
+          kelime[3] = gosterilen[3] AND _
+          kelime[4] = gosterilen[4] then
+        IF hata_sayisi = 0 then
+            LCDOUT $FE, $C0, 6, " ", "Kazandiniz!"
+        else
+            LCDOUT $FE, $C0, 6, (hata_sayisi - 1), "Kazandiniz!"
+        ENDIF
+    ELSEIF hata_sayisi = 0 then
+        LCDOUT $FE, $C0, 6, " "       
+    ELSEIF hata_sayisi = 5 then
+        LCDOUT $FE, $01, 5, 7, str kelime\5
+        LCDOUT $FE, $C0, 6, (hata_sayisi - 1), "Kaybettiniz!"
+    ELSE
+        LCDOUT $FE, $C0, 6, (hata_sayisi - 1)
+    ENDIF
+ RETURN 
+ 
+ EKRAN_SAYACI:
+    for bekleme = 3 to 1 STEP -1
+        LCDOUT $FE, $CF, #bekleme
+        PAUSE 1000
+    NEXT bekleme
+    LCDOUT $FE, $8F, " "    
+ RETURN

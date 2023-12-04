@@ -1,0 +1,26 @@
+'****************************************************************
+'*  Name    : Odev_1_KARASIMSEK_SONUK.BAS                       *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 5.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : Yanan LED saga ve sola dogru kayar.               *
+'****************************************************************
+ sayac var byte
+ lamba VAR BYTE
+ TRISB = 0 : PORTB = 127
+ lamba = 128
+ 
+ KAYDIRMA:
+    FOR sayac = 1 To 7
+        PAUSE 300
+        lamba = lamba / 2
+        PORTB = ~lamba
+        NEXT sayac
+    FOR sayac = 1 TO 7
+        PAUSE 300
+        lamba = lamba * 2
+        PORTB = ~lamba
+        NEXT sayac
+ GOTO KAYDIRMA

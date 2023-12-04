@@ -1,0 +1,36 @@
+'****************************************************************
+'*  Name    : Uygulama_15_TERMINAL_TEST.BAS                     *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 6.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : TERMINAL testi.                                   *
+'*          :                                                   *
+'****************************************************************
+ INCLUDE "TERMINAL.pbp"
+ INCLUDE "LCD.pbp"
+
+ liste var byte[3]
+ bekleme var byte
+ 
+ TERMINAL_TEST:
+    LCDOUT $FE, $01, "VERI BEKLENIYOR." 
+    HSEROUT ["Uc haneli metin giriniz: "]
+    
+    HSERIN [str liste\3]
+    HSEROUT [str liste\3, 13, 10]
+    LCDOUT $FE, $01, "GELEN VERI:", str liste\3, " "
+    
+    GOSUB SAYAC
+ GOTO TERMINAL_TEST
+ 
+ SAYAC:
+    bekleme = 5
+    WHILE bekleme
+        LCDOUT #bekleme
+        LCDOUT $FE, $10
+        PAUSE 1000
+        bekleme = bekleme - 1 
+    WEND
+ RETURN

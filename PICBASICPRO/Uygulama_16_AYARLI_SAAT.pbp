@@ -1,0 +1,68 @@
+'****************************************************************
+'*  Name    : Uygulama_16_AYARLI_SAAT.BAS                       *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 6.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : Terminal ile saat ayari yapilmasini saglar.       *
+'****************************************************************
+ INCLUDE "LCD.pbp"
+ INCLUDE "TERMINAL.pbp"
+ 
+ saat var byte
+ dakika var byte
+ saniye var byte
+ kontrol var byte
+ 
+ BASLANGIC:
+    HSEROUT ["Saat'i ayarlamak icin 'space'e basabilirsiniz.", 13, 10]
+    kontrol = 255
+    
+ YIRMI_DORT_SAAT:
+    WHILE saat < 24
+        WHILE dakika < 60
+            WHILE saniye <  60
+                LCDOUT $FE, $01
+                LCDOUT #(saat DIG 1), #(saat DIG 0), ":",_ 
+                       #(dakika DIG 1), #(dakika DIG 0), ":",_ 
+                       #(saniye DIG 1), #(saniye DIG 0)
+                HSERIN 0, BEKLEMEDEN_DEVAM, [kontrol]
+ BEKLEMEDEN_DEVAM:
+                IF kontrol = 32 THEN
+                    GOTO YENI_AYAR
+                ENDIF
+                PAUSE 1000                
+                saniye = saniye + 1
+            WEND
+            saniye = 0
+            dakika = dakika + 1
+        WEND
+        dakika = 0
+        saat = saat + 1   
+    WEND
+    saat = 0
+ GOTO YIRMI_DORT_SAAT 
+
+ 
+ YENI_AYAR:
+    LCDOUT $FE, $01, "Saat ayarlaniyor"
+    HSEROUT ["Yeni saati giriniz: "]
+    HSERIN [DEC2 saat]
+    HSEROUT [13, 10, "Yeni dakikayi giriniz: "]
+    HSERIN [DEC2 dakika]
+    HSEROUT [13, 10, "Yeni saniyeyi giriniz: "]
+    HSERIN [DEC2 saniye]
+    
+    IF (saat > 23) or (dakika > 59) or (saniye > 59) then
+        LCDOUT $FE, $01, "HATA!"
+        HSEROUT [13, 10, "Hatali giris!", 13, 10, 13, 10]
+        PAUSE 3000
+        GOTO YENI_AYAR
+    ENDIF
+    
+    HSEROUT [13, 10, "Saat ayarlama basarili.", 13, 10, 13, 10]
+ GOTO BASLANGIC    
+ 
+  
+

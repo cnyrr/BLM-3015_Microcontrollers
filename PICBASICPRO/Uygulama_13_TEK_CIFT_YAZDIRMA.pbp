@@ -1,0 +1,22 @@
+'****************************************************************
+'*  Name    : Uygulama_13_TEK_CIFT_YAZDIRMA.BAS                 *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 5.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : LCD'nin üst satirinda çift, alt satirinda tek     *
+'*          : sayilari gösterir.                                *
+'****************************************************************
+ INCLUDE "LCD.pbp"
+ sayac VAR BYTE
+ 
+ SAYDIR:
+    LCDOUT $FE, $01
+    FOR sayac = 0 TO 10
+        LCDOUT $FE, $02, #(sayac * 2)
+        LCDOUT $FE, $C0, #(sayac * 2 + 1)
+        PAUSE 1000
+    NEXT sayac
+ GOTO SAYDIR
+       

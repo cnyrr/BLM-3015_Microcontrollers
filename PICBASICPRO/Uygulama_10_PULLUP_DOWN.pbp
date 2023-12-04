@@ -1,0 +1,29 @@
+'****************************************************************
+'*  Name    : Uygulama_10_PULLUP_DOWN.BAS                       *
+'*  Author  : Emir Can Yarar                                    *
+'*  Notice  : Copyright (c) 2023 Public Domain                  *
+'*          : All Rights Reserved                               *
+'*  Date    : 5.10.2023                                         *
+'*  Version : 1.0                                               *
+'*  Notes   : PULLUP ve PULLDOWN yapisi.                        *
+'****************************************************************
+ SYMBOL SARI         = PORTD.7
+ SYMBOL KIRMIZI      = PORTD.0
+ SYMBOL P_UP_BUTON   = PORTB.0
+ SYMBOL P_DOWN_BUTON = PORTB.3
+ 
+ TRISB = 9 : PORTB = 0 : PORTD = 0
+ 
+ BUTON_KONTROL:
+    IF P_UP_BUTON = 0 THEN
+        HIGH KIRMIZI
+    ELSE
+        LOW KIRMIZI
+    ENDIF
+    
+    IF P_DOWN_BUTON = 1 THEN
+        HIGH SARI
+    ELSE
+        LOW SARI
+    ENDIF
+ GOTO BUTON_KONTROL    
